@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dom易错总结</title>
+</head>
+
+<body>
+    <script>
+        //<div id="box" class="box1" title="我是title" data_title="asdlfkjisdf4654651"></div>
+        var box = document.getElementById("box");
+        console.log(box.title);//获取原有属性可以这样取
+        //尝试直接点出自定义属性
+        console.log(box.data_title);//undefined
+        //想要获取自定义属性，就不是这么用的了
+        //想要获取自定义属性，需要使用  elemnt.getAttribute(属性名);
+        console.log(box.getAttribute("data_title"));
+        // 不光可以获取，还可以设置或者添加
+        //如果想要往html元素里添加自定义属性使用  elemnt.setAttibute(属性名,属性值);
+        box.setAttribute("data_title", "我把原来的东西给替代了");
+        console.log(box.getAttribute("data_title"));
+
+
+        //当使用根据元素的标签名获取元素的时候，不管你有多少个元素，都要一个一个的取出来，才能进行事件的绑定
+        //如果一个符合条件的标签都不存在，那么也不是得到null,得到的是空数组
+        var ipts = document.getElementsByTagName("input");
+        console.log(ipts);
+        ipts.onclick = function () {
+            alert(123456);
+        }
+
+
+        //    语法：
+        //        事件源.on+事件类型 = 事件处理程序
+        //    element.on+eventName = function (){}
+        //    a同事为按钮绑定了一次点击事件
+        var btn = document.getElementById("btn");
+        btn.onclick = function () {
+            alert("我是a同事的工作区域");
+        }
+        console.log(btn.onclick);
+
+        //    b同事又要为btn绑定一次点击事件
+        var btn2 = document.getElementById("btn");
+        btn2.onclick = function () {
+            alert("我是b同事的工作任务");
+        }
+        console.log(btn2.onclick);
+
+        //发现使用on的方式注册事件的时候，只能注册一次，当重复注册的时候，后面注册的会把前面注册的给覆盖掉。
+
+
+        //addEventListener可以重复注册，后面不会覆盖前面
+        //element.addEventListener(事件类型,事件处理程序,false);
+        //获取元素
+        var btn = document.getElementById("btn");
+        //不需要on
+        btn.addEventListener("click", function () {
+            alert("我是第一次绑定的弹框");
+        }, false);
+
+        function fn2() {
+            alert("我是在外面声明的函数里的弹框");
+        }
+        //当你将一个函数传入另一个函数中执行的时候，千万不要在这个传入的函数重加上括号
+        btn.addEventListener("click", fn2, false);
+        btn.addEventListener("click", function () {
+            alert("我是第三次绑定的弹框");
+        }, false);
+        //触发顺序是第一次、第二次、第三次
+        //但这个方式在ie8下不受支持
+
+
+        //    浏览器的兼容范围：从ie6-ie10
+        //    语法：
+        //    elment.attachEvent("事件类型",事件处理函数);
+        //和addEventListener不同，这个用法的事件类型必须有on
+        document.getElementById("btn").attachEvent("onclick", function () {
+            alert("第一次注册事件");
+        });
+        document.getElementById("btn").attachEvent("onclick", function () {
+            alert("第二次注册事件");
+        });
+        document.getElementById("btn").attachEvent("onclick", function () {
+            alert("第三次注册事件");
+        });
+        //而且这个方法与addEventListener触发事件的顺序也有区别，先触发第三次，然后第二次，第一次
+
+        //disabled这个属性是用来禁用控件的
+        <input disabled type="text" name="" id="" />
+
+        //当前输入的文本框高亮显示
+        //什么时候高亮
+        //  获取焦点(触发onfocus事件) -- 鼠标点击这个文本框并且可以输入文本的时候
+        //什么时候不要高亮
+        //失去焦点(触发onblur事件)的时候就不要高亮了 -- 失去焦点：鼠标移出文本框之外，文本框无法输入的时候
+        //    1 获取元素
+        var txt = $id("txt");
+        //    2   注册事件
+        txt.onfocus = function () {
+            this.className = "hl";
+        }
+        txt.onblur = function () {
+            this.className = "";
+        }
+        //鼠标悬停事件onmouseover
+
+        //如果是修改的style的属性，要带上相应的单位，-要改成驼峰命名
+        $id("box").style.width = 400 + "px";
+        $id("box").style.height = 400 + "px";
+        $id("box").style.backgroundColor = "#f00";
+        $id("box").style.backgroundColor = "";
+        //注意，当赋值在css中是怎么写的，在js中动态的赋值，也是一样的写法，这个比较特殊
+        body.style.backgroundImage = "url(" + src + ")";
+
+        //replace()与indexOf()配对上返回值1，没配对上返回值-1
+        for (var i = 0; i < lis.length; i++) {
+            //为了知道当前是哪一个li，先把index保存起来
+            lis[i].index = i;
+            lis[i].onmouseover = function () {
+
+                //把所有的都恢复原貌，修改当前的li的样式
+                for (var j = 0; j < lis.length; j++) {
+                    //把想去掉的去掉
+                    var old = lis[j].className;
+                    old = old.replace("tabCurrent", "");
+                    lis[j].className = old;
+                    //lis[j].className = "tab";
+                }
+                //var old = this.className;
+                //要先判断一下，当前的li有没有tabCurrent这个样式
+                if (old.indexOf("tabCurrent") < 0) {
+                    old += " tabCurrent";
+                    this.className = old;
+                }
+
+                //把所有的都先隐藏，显示当前li对应的div内容
+                for (var k = 0; k < contents.length; k++) {
+                    contents[k].className = "goods";
+                }
+                //怎么知道当前是哪一个li?
+                var index = this.index;
+                var old = contents[index].className;
+                if (old.indexOf("goodsShow") < 0) {
+                    old += " goodsShow";
+                    contents[index].className = old;
+                }
+            }
+        }
+
+        //innerHTML 当字符串里存在标签的时候，设置内容的时候会被解析成为标签
+        //当innerText 使用的时候，如果字符串中包含标签，是不会被解析成标签，而是会被转义成为HTML编码
+        //textContent
+
+        //表单控件都是使用element.value来获取当前值
+
+        //    1 什么叫节点：
+        //        其实页面上所有的内容都叫节点：标签，属性，文本，注释
+        //        Node
+        //节点的三个属性：节点类型 - nodeType，节点名称 - nodeName，节点值 -- nodeValue
+
+        var div = document.getElementById("did");
+        var p = document.getElementById("pid");
+        var link = document.getElementById("link");
+
+        console.log(div.nodeType);
+        console.log(p.nodeType);
+
+        console.log(div.nodeName);
+        console.log(p.nodeName);
+
+        console.log(div.nodeValue);
+        console.log(p.nodeValue);
+        console.log(link.nodeValue);
+
+        /**
+         * 元素节点：
+         *      nodeType    1
+         *      nodeName    对应的标签名
+         *      nodeValue   null
+         */
+
+        //获取属性节点
+        //    element.attributes;
+        var attrs = div.attributes;
+        //console.log(attrs);
+        for (var i = 0; i < attrs.length; i++) {
+            //        console.log("------");
+            //        console.log(attrs[i].nodeType);
+            //        console.log(attrs[i].nodeName);
+            //        console.log(attrs[i].nodeValue);
+        }
+
+        /**
+         * 属性节点：
+         *  nodeType     2
+         *  nodeName    对应属性名
+         *  nodeValue   对应的属性值
+         *
+         */
+
+        var childNodes = div.childNodes;
+        console.log(childNodes);
+        //可以确定这就是一个文本节点
+        var textNode = childNodes[4];
+        console.log(textNode.nodeType);
+        console.log(textNode.nodeName);
+        console.log(textNode.nodeValue);
+
+        var txtNode2 = childNodes[2];
+        console.log(txtNode2.nodeType);
+        console.log(txtNode2.nodeName);
+        console.log(txtNode2.nodeValue)
+
+        /**
+         * 文本节点：
+         *  nodeType     3
+         *  nodeName     #text
+         *  nodeValue    文本节点对应的文本
+         *
+         *  注意：回车也算一个文本节点
+         *
+         */
+
+
+        /*< div id= "father" >
+            <div class="son"></div>
+            <div class="son"></div>
+            <div class="son"></div>
+            <div class="son"></div>
+            <div class="son"></div>
+        </div >*/
+        //先学习如何获取子节点
+        var f = document.getElementById("father");
+        var children = f.childNodes;//换行的text也会获取
+        //获取所有的子元素节点
+        var children = father.children;
+        console.log(children);
+        //获取父元素（不会得到text）
+        var parent = li2.parentNode;
+        console.log(parent);
+        console.log(parent.parentNode);
+        //获取下一个兄弟节点
+        //语法：node.nextSibling(像子节点一样，会获取到text)
+        var next = li2.nextSibling;
+        //获取下一个兄弟元素节点
+        //node.nextElementSibling
+        var li2 = document.getElementById("li2");
+        var ul = document.body.children[0];
+        console.log(ul.childNodes);
+        console.log(li2.nextElementSibling);
+        //上一个兄弟节点
+        //node.previousSibling
+        var li2 = document.getElementById("li2");
+        var pre = li2.previousSibling;
+        console.log(pre);
+        //得到的是上一个兄弟元素节点，在ie8及以下不支持，又要兼容
+        var preEle = li2.previousElementSibling;
+        console.log(preEle);
+        //获取子节点
+        //childNodes    children
+        //获取第一个和最后一个
+        //parent.firstChild    parent.lastChild
+        var ul = document.body.children[0];
+        //    console.log(ul.firstChild);
+        //    console.log(ul.lastChild);
+        //第一个元素子节点和最后一个元素子节点
+        //parent.firstElementChild    parent.lastElementChild
+        console.log(ul.firstElementChild);
+        console.log(ul.lastElementChild);
+        //克隆节点
+        //node.cloneNode(deep)
+        //参数：deep
+        //布尔类型，如果是false，只会克隆自己本身
+        //如果是true，会克隆包括自己在内和所有后代元素 --- 深度克隆
+        var res1 = ul.cloneNode(false);
+        var res2 = ul.cloneNode(true);
+        console.log(res1);
+        console.log(res2);
+
+        //如果想要追加，先得到你想要追加进入结构的元素
+        var ul = document.getElementById("ul");
+        document.getElementById("btn").onclick = function () {
+            var clone = ul.cloneNode(true);
+            //如何把克隆过后的节点放进结构中
+            //node.appendChild(childNode);
+            document.body.appendChild(clone);
+        }
+
+        //setTimeout  设置一个时间，当时间到期，去做一件事儿
+        //setTimuout(code ,delay) 作用：当delay这个时间到期之后，去执行code的代码，code一般是个函数
+        //                              delay以毫秒为单位
+        setTimeout(function () {
+            alert("BOOM");
+        }, 500);
+
+        //setInterval   设置一个时间间隔，没到这个间隔到期，就做一些事儿
+        //setInterval(code,delay);   --- 作用：每当过去delay的毫秒数，就会执行一次code这个函数
+        var i = 0;
+        setInterval(function () {
+            console.log(i);
+            i++;
+        }, 2000);
+        //清楚Interval
+        var id = setInterval(function () {
+            console.log("你能看见我吧");
+        }, 1000);
+        document.getElementById("btn").onclick = function () {
+            //作用就跟根据id找到定时器，对定时器进行清楚/停止
+            clearInterval(id);
+        }
+
+        //如果以后希望把代码写在head里面，要注意把获取元素的代码写道window.onload里面
+        window.onload = function () {
+            var btn = document.getElementById("btn");
+            console.log(btn);
+        }
+    </script>
+</body>
+
+</html>
