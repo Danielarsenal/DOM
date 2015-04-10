@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //strObj.charAt(index)
+        //作用就是：获取索引为index的字符
+
+        var str = "abcdefghi";
+        //    console.log(str);
+        //    console.log(str.charAt(0));
+        //    console.log(str.charAt(3));
+        //    console.log(str.charAt(5));
+        //    console.log(str.charAt(20));
+        //    console.log(str.length);
+
+        //strObj.charCodeAt()
+        //作用：返回对应字符在unicode编码格式中的编号 得到的是一个正整数
+        //    console.log(str.charAt(0));
+        //    console.log(str.charCodeAt(0));
+        //    console.log(str.charAt(3));
+        //    console.log(str.charCodeAt(3));
+        //    console.log(str.charAt(5));
+        //    console.log(str.charCodeAt(5));
+
+        //strObj.lastIndexOf(searchValue,fromIndex)
+        //查找某个字符或者字符串在另一个字符串里面出现的位置  --- 从后向前找
+        var str2 = "aabbaaccddaa";
+        //    console.log(str2.indexOf("a"));
+        //    console.log(str2.lastIndexOf("a"));
+
+        //strObj.replace(old,new);
+        //使用new来替换字符串中的old
+        var str3 = "aabbccddeeffdd";  //使用呵呵来把字符串中的dd替换掉
+        //    console.log(str3);
+        //    console.log(str3.replace("dd","呵呵"));//目前如果想重复替换，只能循环的替换
+
+        //strObj.slice(start,end);
+        //作用：截取从start开始，到end结束的字符 范围[start,end)
+        var str4 = "abcdefghijk";
+        //    console.log(str4.slice(2,7));
+        //strObj.split(opt);
+        //作用：根据opt操作符，分割字符串，把每个分割出来的元素组成一个数组返回
+        var str5 = "abc|def|ghi|jk";
+        //    console.log(str5.split("|"));
+        //    console.log(str5.split(""));
+
+        //strObj.substr(start,length);
+        var str6 = "abcdefghijk";
+        //    console.log(str6.substr(6));
+        //    console.log(str6.substr(2,3));
+
+
+        var str7 = "abcdef";;
+        //将所有的小写字母转换成大写字母
+        //    console.log(str7.toUpperCase());
+        //    //str.toLowerCase()  将大写转换为小写
+        //    console.log(str7.toUpperCase().toLowerCase());
+        //    console.log(str7);
+
+        //    strObj.trim() -- 将字符串前后的空白去掉
+        //如果想把所有的空白全去掉，只能使用替换的方式  -- 将所有的空白替换成空字符串
+        var str8 = "   abc   def   ";
+        // console.log(str8.length);
+        // console.log(str8.trim().length);
+    </script>
+</body>
+
+</html>
