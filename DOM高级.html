@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*
+        今天上午所学的知识点：
+        两大家族：
+        scroll-- 滚动
+        scrollLeft
+        内容相对于容器向左滚动出去的水平距离
+
+        scrollTop
+        内容相对于容器向下滚动出去的垂直距离
+
+        scrollWidth
+        得到的是内容的宽度或者是自身的可视宽度(不包括滚动条)
+
+        scrollHeight
+        得到的是内容的宽度或者是自身的可视宽度(不包括滚动条)
+
+        案例： 固定导航栏
+
+        兼容获取不同浏览器的页面滚动出去的距离
+        谷歌：  document.body.scrollTop
+        谷歌火狐、高版本ie： window.pageYOffset
+        火狐、低版本ie： document.documentElement.scrollTop
+
+        function getScroll() {
+            retrun {
+                top: document.body.scrollTop || window.pageYOffset || document.documentElement.scrollTop || 0,
+                    left: document.body.scrollLeft || window.pageXOffset || document.documentElement.scrollLeft || 0,
+                        }
+        }
+
+        client-- 客户端
+
+        clientTop
+        顶部边框的宽度
+        clientLeft
+        左边边框的宽度
+        clientWidth
+        可视区域的宽度
+        clientHeight
+        可视区域的高度
+        clientX
+        event.ClientX-- 可视区域的横坐标
+        clientY
+        event.ClientY-- 可视区域的纵坐标
+
+        offset-- 偏移
+        offsetLeft
+        元素的左偏移量-- - 相对于offsetParent
+        offsetTop
+        元素距离offsetParent的左上角的垂直偏移量
+        offsetWidth
+        实际宽
+        offsetHeight
+        实际高
+        事件对象
+        浏览器在调用事件处理程序的时候自动传递到事件处理程序的函数中
+        事件源.on事件类型 = function (e) {
+            e.pagex  e.pagey   e.type  e.target
+        }
+
+        onmouseup鼠标弹起事件
+        */
+
+        //on
+            //只能绑定一个事件处理程序
+            //事件源.on + 事件类型  = 事件处理程序
+            //this是事件源
+
+        //addEventListener()
+            //可以绑定多个事件处理程序
+            //事件源.addEventListener(事件类型,事件处理程序,false);
+            //参数个数：3
+            //this也是事件源
+            //没有on
+
+        //attachEvent()
+            //可以绑定多个事件处理程序
+            //事件源.attachEvent(on+事件类型,事件处理程序)
+            //参数个数：2
+            //this是window
+            //带着on的
+    </script>
+
+</body>
+
+</html>
