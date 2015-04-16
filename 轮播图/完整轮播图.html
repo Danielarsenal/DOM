@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .box {
+            width: 730px;
+            height: 454px;
+            padding: 8px;
+            border: 1px solid green;
+            margin: 100px auto;
+        }
+
+        .inner {
+            position: relative;
+            overflow: hidden;
+            height: 454px;
+        }
+
+        #imglist {
+            width: 700%;
+            position: absolute;
+            left: 0;
+        }
+
+        li {
+            float: left;
+        }
+
+        .list {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            margin-left: -85px;
+        }
+
+        .list i {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            color: #333;
+            float: left;
+            font-style: normal;
+            line-height: 20px;
+            font-size: 14px;
+            text-align: center;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .list i:last-child {
+            margin-right: 0;
+        }
+
+        .list i.current {
+            background-color: skyblue;
+            color: #fff;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 100%;
+            top: 50%;
+            margin-top: -30px;
+        }
+
+        .arrow-left, .arrow-right {
+            width: 30px;
+            height: 60px;
+            position: absolute;
+            font: 20px/60px "consolas";
+            color: #fff;
+            background-color: rgba(0, 0, 0, .3);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="box" id="box">
+    <div class="inner" id="inner">
+        <ul id="imglist">
+            <li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/3.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/4.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/5.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/6.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+        </ul>
+        <div class="list" id="list">
+
+        </div>
+        <div class="arrow">
+            <span class="arrow-left">&lt;</span>
+            <span class="arrow-right">&gt;</span>
+        </div>
+    </div>
+</div>
+<script src="common.js" ></script>
+<script>
+    //获取元素
+    var ul = $id("imglist");
+    var list = $id("list");
+    var imgs = ul.children;
+
+    //记录图片宽度
+    var imgWidth = ul.children[0].offsetWidth;
+    //index
+    var currentIndex = 0;
+    //动态创建圆点
+    for(var i=0;i<imgs.length-1;i++){
+        var iEle = document.createElement("i");
+        if(i == 0){
+            iEle.className = "current";
+        }
+        iEle.innerHTML = i+1;
+        list.appendChild(iEle);
+    }
+    //获取list的儿子
+    var circles = list.children;
+    console.log(circles);
+    //1.把鼠标放在圆点上实现轮播
+    //注册圆点事件
+    for(var i=0;i<circles.length;i++){
+        circles[i].index=i;
+        circles[i].onmouseover = function(){
+            var index = this.index;
+            currentIndex = index;
+            var target = currentIndex * imgWidth * -1;
+            animate(ul,target);
+            //把圆点的样式控制一下
+            for(var j = 0;  j < circles.length ;  j++){
+                circles[j].removeAttribute("class");
+            }
+            this.className = "current";
+        }
+    }
+    //2.按左右按钮实现左轮播和右轮播
+    //获取元素
+    var leftBtn = $id("inner").children[2].children[0];
+    var rightBtn = $id("inner").children[2].children[1];
+    //左轮播
+    leftBtn.onclick = function(){
+        if(currentIndex ==0){
+            currentIndex = imgs.length-1;
+            var temp = currentIndex * imgWidth * -1;
+            ul.style.left = temp +"px";
+        }
+        currentIndex--;
+        var target =imgWidth * currentIndex * -1
+        animate(ul,target);
+        //排他
+        for(var i=0;i<circles.length;i++){
+            circles[i].removeAttribute("class");
+        }
+        circles[currentIndex].className = "current";
+    }
+    //左轮播
+    rightBtn.onclick = function(){
+        if(currentIndex == imgs.length-1){
+            currentIndex = 0;
+            ul.style.left = 0 +"px";
+        }
+        currentIndex++;
+        var target =imgWidth * currentIndex * -1
+        animate(ul,target);
+        //排他
+        for(var i=0;i<circles.length;i++){
+            circles[i].removeAttribute("class");
+        }
+        var temp = currentIndex;
+        if(temp == circles.length){
+            circles[0].className = "current";
+        }else{
+            circles[currentIndex].className = "current";
+        }
+    }
+//    自动轮播
+    setInterval(function(){
+        if(currentIndex == imgs.length-1){
+            currentIndex = 0;
+            ul.style.left = 0 +"px";
+        }
+        currentIndex++;
+        var target =imgWidth * currentIndex * -1
+        animate(ul,target);
+        //排他
+        for(var i=0;i<circles.length;i++){
+            circles[i].removeAttribute("class");
+        }
+        var temp = currentIndex;
+        if(temp == circles.length){
+            circles[0].className = "current";
+        }else{
+            circles[currentIndex].className = "current";
+        }
+    },5000)
+</script>
+</body>
+</html>
