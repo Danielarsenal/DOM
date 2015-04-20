@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .main,table {
+            width: 800px;
+            margin: 0 auto;
+        }
+        .main {
+            height: 40px;
+            line-height: 40px;
+        }
+        table , th ,td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        .optd {
+            width: 200px;
+        }
+        .addTable {
+            width: 780px;
+            padding: 10px;
+            border: 1px solid green;
+            position: fixed;
+            top: 200px;
+            left: 50%;
+            margin-left: -400px;
+            background-color: #fff;
+            display: none;
+        }
+        .addTable table {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <input type="button" value="新增一行" id="add"/>
+</div>
+<div id="container"></div>
+<!--用于新增表格获取数据的模块-->
+<div class="addTable" id="addRow">
+    <table>
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>年龄</th>
+        </tr>
+        <tr>
+            <td><input type="text" id="number"/></td>
+            <td><input type="text" id="name"/></td>
+            <td>
+                <select id="gender">
+                    <option >男</option>
+                    <option >女</option>
+                </select>
+            </td>
+            <td><input type="text" id="age"/></td>
+        </tr>
+    </table>
+
+    <div>
+        <input type="button" value="确定" id="sure"/>
+        <input type="button" value="取消" id="cancle"/>
+    </div>
+  
+</div>
+<script>
+    var head = ["学号","姓名","性别","年龄","操作"];
+    var data = [
+        {"number":"001","name":"李狗蛋","gender":"男","age":16},
+        {"number":"002","name":"王大柱","gender":"女","age":17},
+        {"number":"003","name":"李葫芦","gender":"男","age":15},
+        {"number":"004","name":"小明","gender":"男","age":18},
+        {"number":"005","name":"小红","gender":"女","age":16}
+    ];
+
+    //需求：
+//        1 动态生成表格  2 上移，下移，删除，新增
+        //需求1 创建表格
+//        1.1 先来一个table元素
+    var table = document.createElement("table");
+    //1.2 创建表头行
+    var thead = document.createElement("tr");
+    //1.3 创建表头的每一个单元格
+    for(var i = 0;  i < head.length ;  i++){
+        var th = document.createElement("th");
+        //1.4 往表头的单元格里面添加内容
+        th.innerHTML = head[i];
+//        1.5 把单元格追加到表头行里面
+        thead.appendChild(th);
+    }
+    //1.6 表头创建完毕，追加到表格里
+    table.appendChild(thead);
+//    1.7 创建表格的主体数据
+//    1.7.1 根据数据创建每一个行
+    for(var j = 0; j < data.length ; j++){
+        var tr = createRow(data[j]);
+        //1.7.7 把创建好的tr追加到table里面
+        table.appendChild(tr);
+    }
+    
+
+    document.getElementById("container").appendChild(table);
+
+    /**
+     * 创建一个按钮的函数
+     * @param value
+     * @param fn
+     * @returns {Element}
+     */
+    function createButton(value,fn){
+        var btn = document.createElement("input");
+        btn.type = "button";
+        btn.value = value;
+        btn.onclick = fn;
+        return btn;
+    }
+
+    /**
+     * 上移的函数
+     */
+    function up(){
+        //把当前行插入当上一行之前   insertBefore   --- parentNode    newChild  oldChild
+        var row = this.parentNode.parentNode;
+        var previous = row.previousElementSibling;
+        //判断一下previous是不是表格的第一行，如果是，不再往前移动
+        if(previous === table.children[0]){
+            return;
+        }
+        table.insertBefore(row,previous);
+    }
+    /**
+     * 下移
+     */
+    function down(){
+        //把当前行插入到下一行之后，换言之，就是下两行之前   insertBefore
+        var row = this.parentNode.parentNode;
+        var next = row.nextElementSibling;
+        //如果当前行已经是最后一样，next就不存在了，不应该在移动
+        if(next == null){
+            return;
+        }
+        var oldChild = next.nextElementSibling;
+        //当前行在倒数第二行的情况
+        if(row.nextElementSibling && oldChild === null){
+            //还是应该把当前行下移
+            table.appendChild(row);
+        }else{
+            table.insertBefore(row,oldChild);
+        }
+    }
+    /**
+     * 删除
+     */
+    function del(){
+        //要删除的是一整行 -- remvoeChild   父元素 当前行
+//        if(confirm())
+        var row = this.parentNode.parentNode;
+        table.removeChild(row);
+    }
+
+    //新增的逻辑
+    //思路：获取addrow里面的数据，动态生成一行，添加到table里
+    //什么时候添加？点击确定，什么时候有确定？点击新增一行能把确定显示出来
+//    1 点击新增，显示添加的表格
+    document.getElementById("add").onclick = function(){
+        //显示新增所需的数据表格
+        document.getElementById("addRow").style.display = "block";
+    }
+
+//    2 点击确定，新增行
+    document.getElementById("sure").onclick = function(){
+//        2.1 获取所有的数据，新建一行，追加到table里面
+        var number = document.getElementById("number").value;
+        var name = document.getElementById("name").value;
+        var gender = document.getElementById("gender").value;
+        var age = document.getElementById("age").value;
+
+//        为了代码复用：把这些数据也变成对象
+        var obj = {
+            number:number,
+            name:name,
+            gender:gender,
+            age:age
+        };
+        var tr = createRow(obj);
+        //2.3 把行追加到table
+        table.appendChild(tr);
+        //输入完毕之后，把新增的隐藏
+        document.getElementById("addRow").style.display = "none";
+    }
+
+    /**
+     * 创建一行的函数
+     * @param obj
+     * @returns {Element}
+     */
+    function createRow(obj){
+        //        1.7.2 创建行
+        var tr = document.createElement("tr");
+//        1.7.3 根据数据对象，创建每一个单元格
+        for (var key in obj){
+//            1.7.4 创建td
+            var td = document.createElement("td");
+//            1.7.5 往td里添加内容  -- 内容就是属性对应的值
+            td.innerHTML = obj[key];
+            // 1.7.6 把td追加到tr里面
+            tr.appendChild(td);
+        }
+        //1.7.8 自己把操作这一列补上
+        var optTd = document.createElement("td");
+//        1.7.9 往操作这个列里添加三个按钮
+        var btn1 = createButton("上移",up);
+        optTd.appendChild(btn1);
+        var btn2 = createButton("下移",down);
+        optTd.appendChild(btn2);
+        var btn3 = createButton("删除",del);
+        optTd.appendChild(btn3);
+        //1.7.10 把操作列添加到行里
+        tr.appendChild(optTd);
+        return tr;
+    }
+
+    //隐藏的逻辑
+    document.getElementById("cancle").onclick = function (){
+        document.getElementById("addRow").style.display = "none";
+    }
+</script>
+</body>
+</html>

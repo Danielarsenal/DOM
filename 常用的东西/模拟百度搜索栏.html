@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-size: 20px;
+        }
+
+        .box {
+            width: 600px;
+            height: 40px;
+            margin: 200px auto;
+            position: relative;
+        }
+
+        #txt {
+            width: 500px;
+            height: 40px;
+            border: 1px solid #eee;
+            font-size: 20px;
+            box-sizing: border-box;
+        }
+
+        #search {
+            width: 100px;
+            height: 40px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        #keywords {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            background-color: rgb(123, 255, 24);
+            list-style: none;
+            width: 500px;
+        }
+
+        li {
+            line-height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="top">
+            <input type="text" id="txt" /><input type="button" value="search" id="search" />
+        </div>
+        <ul id="keywords"></ul>
+    </div>
+    <script>
+        var keywords = ["冬天吃什么", "冬天的离别", "冬天有多冷", "林丹出轨门", "林丹夺冠", "123", "JavaScript", "Java", "黄鳝", "黄鳝煮汤", "黄鳝煮粥", "咸鱼", "咸鱼茄子煲", "咸鱼翻身"];
+        var text = document.querySelector('#txt');
+        var search = document.querySelector('#search');
+        var key = document.querySelector('#keywords');
+
+        text.onkeyup = function () {
+            var textin = text.value;
+            key.innerHTML = '';
+            for (let i = 0; i < keywords.length; i++) {
+                if (keywords[i].indexOf(textin) > -1 && textin!='') {
+                    var li = document.createElement('li');
+                    li.innerHTML = keywords[i];
+                    key.appendChild(li);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

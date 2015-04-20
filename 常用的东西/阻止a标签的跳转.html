@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title></title>
+    <base target="_blank"/>
+</head>
+<body>
+<!--1 在函数内部返回false-->
+<a href="http://www.baidu.com" onclick="alert('123456');return false;">百度1</a> <br/>
+<!--2 在js代码中返回false-->
+<a id="link" href="http://www.163.com">网易</a> <br/>
+<script>
+
+    var link = document.getElementById("link");
+    link.onclick =function(){
+        return false;
+    }
+
+</script>
+<!--2 在a标签的href属性里设置：javascript:void(0);-->
+<a href="javascript:void(0);">新浪</a>
+</body>
+</html>

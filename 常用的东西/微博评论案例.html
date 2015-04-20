@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .father {
+            width: 800px;
+            margin: 0 auto;
+        }
+        .content {
+            height: 120px;
+            padding: 10px;
+            border:1px solid red;
+        }
+        .commens {
+            padding: 10px;
+            border:1px solid green;
+        }
+        .commens div {
+            padding: 5px 8px;
+            border-bottom:1px dashed #666;
+        }
+        .add {
+            width: 800px;
+            margin: 0 auto;
+            margin-top: 10px;
+            border:1px solid blue;
+            padding: 10px;
+            padding-bottom: 60px;
+            box-sizing: border-box;
+        }
+        textarea {
+            display: block;
+            width: 760px;
+            margin:0 auto;
+            height: 120px;
+            resize:none;
+        }
+        #btn {
+            float: right;
+            padding: 10px 14px;
+            margin-top: 10px;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="father">
+        <div class="content">
+            今天去了一个很神奇的地方，看照片能猜出来是哪里吗？
+        </div>
+        <div class="commens" id="commens">
+            <div>评论：</div>
+        </div>
+    </div>
+    <div class="add">
+        <textarea name="txt" id="txt"></textarea>
+        <input type="button" value="发表" id="btn" />
+    </div>
+    <script>
+        var yourComment = document.querySelector('#txt');
+        var btn = document.querySelector('#btn');
+        var commens = document.querySelector('#commens');
+        btn.onclick = function(){
+            var text = yourComment.value;
+            var div = document.createElement('div');
+            div.innerHTML = text;
+            commens.appendChild(div);
+            yourComment.value = '';
+        }
+    </script>
+</body>
+</html>

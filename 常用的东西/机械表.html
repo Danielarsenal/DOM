@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .clock {
+            width: 600px;
+            height: 600px;
+            margin: 100px auto;
+            background: url(images/clock.jpg) no-repeat;
+            position: relative;
+        }
+
+        .clock div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url(images/hour.png) no-repeat center center;
+        }
+
+        #m {
+            background-image: url(images/minute.png);
+        }
+
+        #s {
+            background-image: url(images/second.png);
+        }
+    </style>
+</head>
+<body>
+<div class="clock">
+    <div id="h"></div>
+    <div id="m"></div>
+    <div id="s"></div>
+</div>
+<script>
+
+    function $id(id){
+        return document.getElementById(id);
+    }
+
+    //思路：每隔100毫秒，旋转每一个指针 --- transform:rotateZ(90deg);
+    // 1000毫秒  转动 6 度
+    // 500 毫秒  转动 3 度   500 / 1000 × 6
+    //特点：机械表里面表示的时间，就是当前的系统时间
+
+    //    1 先获取所有的对象
+    var s = $id("s");
+    var m = $id("m");
+    var h = $id("h");
+    //    2 设置定时器，控制每一个指针
+    setInterval(function(){
+        rotate();
+    },100);
+
+    //为了让他刚进来就执行一次，封装成函数，一开始就调用一次
+    function rotate(){
+        //3 在定时器里获取当前时间，求出当前的角度，进行旋转
+//        3.1 当前时间
+        var date = new Date();
+        var hh = date.getHours();
+        var mm = date.getMinutes();
+        var ss = date.getSeconds();
+        var ms = date.getMilliseconds();
+        //3.2 计算出每个指针每个刻度应该旋转的角度
+        var angle_s = 6;
+        var angle_m = 6;
+        var angle_h = 30;
+        //3.3 计算当前时间所应该指向的刻度，也就是当前的选转角度
+        var angle_cur_s = (ss + ms/1000) * angle_s;
+        var angle_cur_m = (mm + ss / 60) * angle_m;
+        var angle_cur_h = (hh + mm/60) * angle_h;
+        //3.4 设置当前每个指针的旋转角度
+        s.style.transform = "rotateZ("+ angle_cur_s +"deg)";
+        m.style.transform = "rotateZ("+ angle_cur_m +"deg)";
+        h.style.transform = "rotateZ("+ angle_cur_h +"deg)";
+    }
+    //为了让他刚进来就执行一次，手动的调用一次
+    rotate();
+
+
+</script>
+</body>
+</html>
